@@ -94,7 +94,8 @@
 
 		</main>
 		<script type="text/javascript">
-				let recommendations;
+			const SATS_PER_BTC = 100_000_000
+			let recommendations;
 			function add_channel(address=""){
 				var table = document.getElementById("channels");
 				let indexToAdd = Math.floor(channels.children.length/2)
@@ -122,10 +123,10 @@
 						method: 'GET',
 					})).json()
 					document.getElementsByClassName('routing-node-alias')[0].innerHTML = recommendations.routing_node.alias
-					document.getElementsByClassName('routing-node-capacity')[0].innerHTML = recommendations.routing_node.capacity
+					document.getElementsByClassName('routing-node-capacity')[0].innerHTML = `₿${recommendations.routing_node.capacity / SATS_PER_BTC}`
 					document.getElementsByClassName('routing-node-count')[0].innerHTML = recommendations.routing_node.active_channel_count
 					document.getElementsByClassName('edge-node-alias')[0].innerHTML = recommendations.edge_node.alias
-					document.getElementsByClassName('edge-node-capacity')[0].innerHTML = recommendations.edge_node.capacity
+					document.getElementsByClassName('edge-node-capacity')[0].innerHTML = `₿${recommendations.edge_node.capacity / SATS_PER_BTC}`
 					document.getElementsByClassName('edge-node-count')[0].innerHTML = recommendations.edge_node.active_channel_count
 					Array.from(document.getElementsByClassName('recommendation-node-wrapper')).forEach(el => el.classList.remove('invisible'));
 				} catch (error) {
