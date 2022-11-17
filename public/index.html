@@ -146,6 +146,37 @@
 
 			}
 
+			async function get_recommended_channels(){
+				document.getElementsByClassName('recommendation-button-wrapper')[0].classList.add('invisible')
+				try {
+					recommendations = await (await fetch('/recommended', {
+						method: 'GET',
+					})).json()
+					document.getElementsByClassName('routing-node-alias')[0].innerHTML = recommendations.routing_node.alias
+					document.getElementsByClassName('routing-node-capacity')[0].innerHTML = recommendations.routing_node.capacity
+					document.getElementsByClassName('routing-node-count')[0].innerHTML = recommendations.routing_node.active_channel_count
+					document.getElementsByClassName('edge-node-alias')[0].innerHTML = recommendations.edge_node.alias
+					document.getElementsByClassName('edge-node-capacity')[0].innerHTML = recommendations.edge_node.capacity
+					document.getElementsByClassName('edge-node-count')[0].innerHTML = recommendations.edge_node.active_channel_count
+					Array.from(document.getElementsByClassName('recommendation-node-wrapper')).forEach(el => el.classList.remove('invisible'));
+				} catch (error) {
+					console.error(error)
+					alert("Something went wrong. Please try again.")
+				}
+			}
+
+			function add_recommended_node(type = 'routing_node') {
+				const node = recommendations[type];
+				if (!node) {
+					alert("Something went wrong. Please try again.");
+					return;
+				}
+				const pubkey = node.public_key;
+				const socket = node.sockets.includes(',') ? node.sockets.split(',')[0] : node.sockets;
+				add_channel(`${pubkey}@${socket}`);
+
+			}
+
 			document.querySelector("form").addEventListener("submit", async (event) => {
 				event.preventDefault();
 				let form = event.currentTarget;
